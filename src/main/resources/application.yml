@@ -2,7 +2,7 @@ spring:
   data:
     elasticsearch:
       cluster-name: elasticsearch
-      cluster-nodes: 47.92.107.76:10022
+      cluster-nodes: 47.92.68.88:10022
       properties:
         path:
           logs: ./elasticsearch/log #elasticsearch日志存储目录
@@ -10,10 +10,10 @@ spring:
   application:
     name: ec_server_scheduls
   profiles:
-    active: ${ENV:dev}
+    active: ${ENV:prod}
   jpa:
     database: mysql
-    show-sql: false
+    show-sql: true
     hibernate:
       ddl-auto: update
       naming:

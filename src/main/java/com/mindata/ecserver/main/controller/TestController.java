@@ -1,6 +1,7 @@
 package com.mindata.ecserver.main.controller;
 
 import com.mindata.ecserver.global.http.response.BaseData;
+import com.mindata.ecserver.main.manager.ContactManager;
 import com.mindata.ecserver.main.service.CompanyCoordinateService;
 import com.mindata.ecserver.main.service.EsContactService;
 import com.mindata.ecserver.main.service.FetchCompanyPhoneHistoryService;
@@ -27,6 +28,8 @@ public class TestController {
     private PtCustomerStateService ptCustomerStateService;
     @Resource
     private DealCustomerSchedule dealCustomerSchedule;
+    @Resource
+    private ContactManager contactManager;
 
     @GetMapping("/fetch")
     public BaseData fetchCompanyHistory() throws IOException {
@@ -60,6 +63,11 @@ public class TestController {
     @GetMapping("/customer")
     public String customer() {
         dealCustomerSchedule.executeDealCustomerOperationTask();
+        return "customer";
+    }
+    @GetMapping("/test")
+    public String test() {
+        contactManager.test();
         return "customer";
     }
 }

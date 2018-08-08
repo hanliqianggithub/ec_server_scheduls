@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /**
  * @author wuweifeng wrote on 2017/11/8.
  */
-public interface CompanyCodeRepository extends JpaRepository<CompanyCode, Integer> {
+public interface CompanyCodeRepository extends JpaRepository<CompanyCode, Long> {
 }

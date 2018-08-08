@@ -25,4 +25,12 @@ public interface Constant {
     String DOUHAO = ",";
 
     Sort.Direction DIRECTION = Sort.Direction.DESC;
+
+
+    Integer CODESIZE_0_50 = 1;
+    Integer CODESIZE_51_150 = 2;
+    Integer CODESIZE_151_500 = 3;
+    Integer CODESIZE_501_2000 = 4;
+    Integer CODESIZE_2000 = 5;
+    Integer CODESIZE_OTHER = 6;
 }

@@ -122,4 +122,17 @@ public interface EcContactRepository extends JpaRepository<EcContactEntity, Inte
     @Modifying
     @Transactional(rollbackFor = Exception.class)
     Integer updateState(String ids);
+
+    /**
+     *
+     * @param mobile
+     * @param phone
+     * @return
+     */
+    Integer countByMobileAndPhone(String mobile,String phone);
+
+//    Integer countByName(String name);
+//
+//    Integer countByCompany(String company);
+
 }

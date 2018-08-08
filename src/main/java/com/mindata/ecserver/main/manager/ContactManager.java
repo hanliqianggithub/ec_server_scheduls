@@ -1,8 +1,15 @@
 package com.mindata.ecserver.main.manager;
 
+import com.mindata.ecserver.global.util.CommonUtil;
 import com.mindata.ecserver.main.model.es.EsContact;
+import com.mindata.ecserver.main.model.primary.Contact;
 import com.mindata.ecserver.main.model.primary.EcContactEntity;
+import com.mindata.ecserver.main.model.thirdly.CompanyContact;
+import com.mindata.ecserver.main.model.thirdly.CompanyJobInfo;
 import com.mindata.ecserver.main.repository.primary.EcContactRepository;
+import com.mindata.ecserver.main.repository.thirdly.CompanyJobInfoRepository;
+import com.xiaoleilu.hutool.util.StrUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -16,7 +23,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.mindata.ecserver.global.Constant.DOUHAO;
 import static com.mindata.ecserver.global.Constant.STATE_NORMAL;
+import static com.mindata.ecserver.global.util.CommonUtil.reviseFixedTelephone;
 
 /**
  * @author wuweifeng wrote on 2017/11/9.
@@ -33,18 +42,25 @@ public class ContactManager {
     private EsVocationCodeManager esVocationCodeManager;
     @Resource
     private EsContactManager esContactManager;
+    @Resource
+    private CompanyContactManager companyContactManager;
+    @Resource
+    private CompanyCodeManager companyCodeManager;
+
+    @Resource
+    private CompanyInfoManager companyInfoManager;
+    @Resource
+    private CompanyJobInfoRepository companyJobInfoRepository;
 
     private final Logger LOGGER = LoggerFactory.getLogger(getClass().getName());
 
 
     /**
      * 计算两个id间的数量
-     * @param beginId
-     * begin
-     * @param endId
-     * end
-     * @return
-     * 数量
+     *
+     * @param beginId begin
+     * @param endId   end
+     * @return 数量
      */
     public Long countIdBetween(Long beginId, Long endId) {
         return ecContactRepository.countByIdBetween(beginId, endId);
@@ -56,10 +72,9 @@ public class ContactManager {
 
     /**
      * 分页查询所有
-     * @param pageable
-     * pageable
-     * @return
-     * 分页结果
+     *
+     * @param pageable pageable
+     * @return 分页结果
      */
     public Page<EcContactEntity> findAll(Pageable pageable) {
         return ecContactRepository.findAll(pageable);
@@ -167,8 +182,8 @@ public class ContactManager {
      *
      * @param compId 公司Id
      */
-    private void updateVocationCode(Long compId,String companyName) {
-        List<String> industryList = companyIndustryInfoManager.getIndustryInfoForDb(compId,companyName);
+    private void updateVocationCode(Long compId, String companyName) {
+        List<String> industryList = companyIndustryInfoManager.getIndustryInfoForDb(compId, companyName);
         HashMap<String, Integer> map = esVocationCodeManager.findByVocationName(industryList.get(0));
         Integer vocationCode = map.get("vocationCode");
         Integer num = ecContactRepository.updateCodeByVocationName(vocationCode, compId);
@@ -181,11 +196,74 @@ public class ContactManager {
      * 查询某段时间内的数据
      */
     public Page<EcContactEntity> findByDateBetween(Date begin, Date end, Pageable pageable) {
-        return ecContactRepository.findByCreateTimeBetween(begin,end,pageable);
+        return ecContactRepository.findByCreateTimeBetween(begin, end, pageable);
     }
+
 
     public EcContactEntity findOne(Long id) {
         return ecContactRepository.findById(id);
     }
+
+    public void test() {
+        StringBuilder jobName = new StringBuilder();
+        List<CompanyContact> contactList = companyContactManager.getAll();
+//                companyContactManager.getCompanyContactListByUpdateTime();
+
+        for (CompanyContact companyContact : contactList) {
+            String companyName = companyCodeManager.getNameById(companyContact.getCompId());
+            Integer count = ecContactRepository.countByMobileAndPhone(
+                    CommonUtil.reviseMobile(companyContact.getPhone()), reviseFixedTelephone(companyContact.getPhone()));
+
+            List<CompanyJobInfo> list = companyJobInfoRepository.findByCompId(companyContact.getCompId());
+            for (CompanyJobInfo companyJobInfo : list) {
+                if (StrUtil.isNotEmpty(companyJobInfo.getJobName())) {
+                    jobName.append(companyJobInfo.getJobName()).append(DOUHAO);
+                }
+            }
+            System.out.println(count + "bbbbbbbbbbbbbbb");
+
+            if (count == 0) {
+                System.out.println(companyContact.getCompId() + "aaaaaaaaaaaaaaa");
+                Integer province = 0;
+                Integer city = 0;
+                if (StringUtils.isNotEmpty(companyContact.getAddr())) {
+                    HashMap<String, Integer> map = ecCodeAreaManager.findAreaCode(companyContact.getAddr());
+                    province = map.get("province");
+                    city = map.get("city");
+                }
+                List<String> industryList = companyIndustryInfoManager.getIndustryInfoForDb(companyContact.getCompId(), companyName);
+                Integer vocationCode = esVocationCodeManager.findByVocationName(industryList.get(0)).get("vocationCode");
+                Integer webSiteId = 1;
+                ////////////////////////
+                EcContactEntity ecContactEntity = new EcContactEntity();
+                ecContactEntity.setName(companyContact.getContactPerson()== null ? "" : companyContact.getContactPerson());
+                ecContactEntity.setCompany(companyName);
+                ecContactEntity.setLegal(0);
+                if (jobName.toString().contains("销售")) {
+                    ecContactEntity.setNeedSale(1);
+                } else {
+                    ecContactEntity.setNeedSale(0);
+                }
+                ecContactEntity.setGender(0);
+                ecContactEntity.setMemberSizeTag(companyInfoManager.getSizeId(companyContact.getCompId()));
+                ecContactEntity.setMobile(CommonUtil.reviseMobile(companyContact.getPhone()));
+                ecContactEntity.setPhone(reviseFixedTelephone(companyContact.getPhone()));
+                ecContactEntity.setWebsiteId(webSiteId);
+                ecContactEntity.setProvince(province.toString());
+                ecContactEntity.setCity(city.toString());
+                ecContactEntity.setAddress(companyContact.getAddr() == null ? "" : companyContact.getAddr());
+                ecContactEntity.setVocation(vocationCode);
+                ecContactEntity.setState(0);
+                ecContactEntity.setCompId(companyContact.getCompId());
+                ecContactEntity.setCreateTime(new Date());
+                ecContactEntity.setInsertTime(new Date());
+                ecContactEntity.setCompanyScore(0.00);
+                ecContactEntity.setIpcFlag("");
+                ecContactEntity.setMainJob("");
+                ecContactRepository.save(ecContactEntity);
+            }
+        }
+    }
+
 
 }

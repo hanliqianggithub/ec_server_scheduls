@@ -1,17 +1,17 @@
 spring:
   datasource:
     primary:
-      url: jdbc:mysql://localhost:3306/company?autoReconnect=true&useUnicode=true
+      url: jdbc:mysql://47.92.159.54:3306/company_bak?autoReconnect=true&useUnicode=true&useSSL=false
       username: root
-      password: root
+      password: MAIda6868#
     secondary:
-      url: jdbc:mysql://localhost:3306/ec_server?autoReconnect=true&useUnicode=true
+      url: jdbc:mysql://47.92.159.54:3306/ec_server_bak?autoReconnect=true&useUnicode=true&useSSL=false
       username: root
-      password: root
+      password: MAIda6868#
     thirdly:
-      url: jdbc:mysql://localhost:3306/scrapy?autoReconnect=true&useUnicode=true
+      url: jdbc:mysql://47.92.159.54:3306/scrapy_bak?autoReconnect=true&useUnicode=true&useSSL=false
       username: root
-      password: root
+      password: MAIda6868#
   redis:
     host: localhost
     port: 6379

@@ -1,15 +1,14 @@
 package com.mindata.ecserver.main.model.primary;
 
-import javax.persistence.*;
 import java.util.Date;
 
 /**
- * @author wuweifeng wrote on 2017/10/24.
- * 爬虫爬取的企业信息
- */
-@Entity
-@Table(name = "ec_contact_no_push")
-public class EcContactEntity {
+ * 企业信息
+ *
+ * @author HanLiqiang
+ * @create 2018-08-08 下午2:54
+ **/
+public class Contact {
     private Long id;
     /**
      * 人名
@@ -90,10 +89,6 @@ public class EcContactEntity {
     private Date createTime;
     private Date insertTime;
 
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
     public Long getId() {
         return id;
     }
@@ -102,38 +97,6 @@ public class EcContactEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "ipc_flag")
-    public String getIpcFlag() {
-        return ipcFlag;
-    }
-
-    public void setIpcFlag(String ipcFlag) {
-        this.ipcFlag = ipcFlag;
-    }
-
-    @Basic
-    @Column(name = "main_job")
-    public String getMainJob() {
-        return mainJob;
-    }
-
-    public void setMainJob(String mainJob) {
-        this.mainJob = mainJob;
-    }
-
-    @Basic
-    @Column(name = "comp_id")
-    public Long getCompId() {
-        return compId;
-    }
-
-    public void setCompId(Long compId) {
-        this.compId = compId;
-    }
-
-    @Basic
-    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -142,8 +105,6 @@ public class EcContactEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "company")
     public String getCompany() {
         return company;
     }
@@ -152,8 +113,6 @@ public class EcContactEntity {
         this.company = company;
     }
 
-    @Basic
-    @Column(name = "legal")
     public Integer getLegal() {
         return legal;
     }
@@ -162,8 +121,6 @@ public class EcContactEntity {
         this.legal = legal;
     }
 
-    @Basic
-    @Column(name = "gender")
     public Integer getGender() {
         return gender;
     }
@@ -172,8 +129,6 @@ public class EcContactEntity {
         this.gender = gender;
     }
 
-    @Basic
-    @Column(name = "mobile")
     public String getMobile() {
         return mobile;
     }
@@ -182,8 +137,6 @@ public class EcContactEntity {
         this.mobile = mobile;
     }
 
-    @Basic
-    @Column(name = "phone")
     public String getPhone() {
         return phone;
     }
@@ -192,8 +145,6 @@ public class EcContactEntity {
         this.phone = phone;
     }
 
-    @Basic
-    @Column(name = "email")
     public String getEmail() {
         return email;
     }
@@ -202,8 +153,6 @@ public class EcContactEntity {
         this.email = email;
     }
 
-    @Basic
-    @Column(name = "fax")
     public String getFax() {
         return fax;
     }
@@ -212,8 +161,6 @@ public class EcContactEntity {
         this.fax = fax;
     }
 
-    @Basic
-    @Column(name = "province")
     public String getProvince() {
         return province;
     }
@@ -222,8 +169,6 @@ public class EcContactEntity {
         this.province = province;
     }
 
-    @Basic
-    @Column(name = "city")
     public String getCity() {
         return city;
     }
@@ -232,8 +177,6 @@ public class EcContactEntity {
         this.city = city;
     }
 
-    @Basic
-    @Column(name = "title")
     public String getTitle() {
         return title;
     }
@@ -242,8 +185,6 @@ public class EcContactEntity {
         this.title = title;
     }
 
-    @Basic
-    @Column(name = "qq")
     public String getQq() {
         return qq;
     }
@@ -252,8 +193,6 @@ public class EcContactEntity {
         this.qq = qq;
     }
 
-    @Basic
-    @Column(name = "wechat")
     public String getWechat() {
         return wechat;
     }
@@ -262,8 +201,6 @@ public class EcContactEntity {
         this.wechat = wechat;
     }
 
-    @Basic
-    @Column(name = "address")
     public String getAddress() {
         return address;
     }
@@ -272,8 +209,6 @@ public class EcContactEntity {
         this.address = address;
     }
 
-    @Basic
-    @Column(name = "vocation")
     public Integer getVocation() {
         return vocation;
     }
@@ -282,8 +217,6 @@ public class EcContactEntity {
         this.vocation = vocation;
     }
 
-    @Basic
-    @Column(name = "url")
     public String getUrl() {
         return url;
     }
@@ -292,8 +225,6 @@ public class EcContactEntity {
         this.url = url;
     }
 
-    @Basic
-    @Column(name = "memo")
     public String getMemo() {
         return memo;
     }
@@ -302,8 +233,6 @@ public class EcContactEntity {
         this.memo = memo;
     }
 
-    @Basic
-    @Column(name = "vocation_tag")
     public Integer getVocationTag() {
         return vocationTag;
     }
@@ -312,8 +241,6 @@ public class EcContactEntity {
         this.vocationTag = vocationTag;
     }
 
-    @Basic
-    @Column(name = "member_size_tag")
     public Integer getMemberSizeTag() {
         return memberSizeTag;
     }
@@ -322,8 +249,6 @@ public class EcContactEntity {
         this.memberSizeTag = memberSizeTag;
     }
 
-    @Basic
-    @Column(name = "need_sale")
     public Integer getNeedSale() {
         return needSale;
     }
@@ -332,24 +257,44 @@ public class EcContactEntity {
         this.needSale = needSale;
     }
 
-    @Basic
-    @Column(name = "create_time")
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    @Basic
-    @Column(name = "website_id")
     public Integer getWebsiteId() {
         return websiteId;
     }
 
     public void setWebsiteId(Integer websiteId) {
         this.websiteId = websiteId;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public Long getCompId() {
+        return compId;
+    }
+
+    public void setCompId(Long compId) {
+        this.compId = compId;
+    }
+
+    public String getIpcFlag() {
+        return ipcFlag;
+    }
+
+    public void setIpcFlag(String ipcFlag) {
+        this.ipcFlag = ipcFlag;
+    }
+
+    public String getMainJob() {
+        return mainJob;
+    }
+
+    public void setMainJob(String mainJob) {
+        this.mainJob = mainJob;
     }
 
     public Double getCompanyScore() {
@@ -360,14 +305,12 @@ public class EcContactEntity {
         this.companyScore = companyScore;
     }
 
-    @Basic
-    @Column(name = "state")
-    public Integer getState() {
-        return state;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setState(Integer state) {
-        this.state = state;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 
     public Date getInsertTime() {
@@ -378,3 +321,6 @@ public class EcContactEntity {
         this.insertTime = insertTime;
     }
 }
+
+    
+

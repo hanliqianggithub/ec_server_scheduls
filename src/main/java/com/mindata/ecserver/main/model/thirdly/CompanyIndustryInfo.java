@@ -9,4 +9,14 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "xs_company_info")
 public class CompanyIndustryInfo extends BaseCompanyIndustryInfo {
+
+    private String firmSize;
+
+    public String getFirmSize() {
+        return firmSize;
+    }
+
+    public void setFirmSize(String firmSize) {
+        this.firmSize = firmSize;
+    }
 }
