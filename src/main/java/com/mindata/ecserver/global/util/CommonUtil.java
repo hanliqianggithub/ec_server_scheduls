@@ -166,6 +166,7 @@ public class CommonUtil {
         }
         return CODESIZE_OTHER;
     }
+
     /**
      * 处理手机号
      *
@@ -173,17 +174,32 @@ public class CommonUtil {
      * @return boolean
      */
     public static String reviseMobile(String phone) {
-        String result = "";
         if (StrUtil.isNotEmpty(phone)) {
             String regex = "1(3[0-9]|4[57]|5[0-35-9]|7[0135678]|8[0-9])\\d{8}";
-            Pattern p = Pattern.compile(regex);
-            Matcher m = p.matcher(phone);
-            while (m.find()) {
-                result = m.group();
+            if (phone.contains(",")) {
+                String[] phones = phone.split(",");
+                for (int i = 0; i < phones.length; i++) {
+                    String phoneTemp = phones[i];
+                    Pattern p = Pattern.compile(regex);
+                    Matcher m = p.matcher(phoneTemp);
+                    boolean flag = m.matches();
+                    if (flag) {
+                        return phoneTemp;
+                    }
+                }
+            } else {
+                Pattern p = Pattern.compile(regex);
+                Matcher m = p.matcher(phone);
+                boolean flag = m.matches();
+                if (flag) {
+                    return phone;
+                }
             }
+
         }
-        return result;
+        return "";
     }
+
     /**
      * 处理固定电话
      *
@@ -191,19 +207,34 @@ public class CommonUtil {
      * @return boolean
      */
     public static String reviseFixedTelephone(String fixedTelephone) {
-        String result = "";
         if (StrUtil.isNotEmpty(fixedTelephone)) {
             String regex = "((0\\d{2,3}-?)?\\d{3,4}-?\\d{3,4}(-\\d{1,4})?)|(400-?(\\d{3,4}-?\\d{3,4})(-\\d{1,4})?)";
-            Pattern p = Pattern.compile(regex);
-            Matcher m = p.matcher(fixedTelephone);
-
-            while (m.find()) {
-                result = m.group();
+            if (fixedTelephone.contains(",")) {
+                String[] aa = fixedTelephone.split(",");
+                for (int i = 0; i < aa.length; i++) {
+                    String bb = aa[i];
+                    Pattern p = Pattern.compile(regex);
+                    Matcher m = p.matcher(bb);
+                    boolean flag = m.matches();
+                    if (flag) {
+                        return bb;
+                    }
+                }
+            } else {
+                Pattern p = Pattern.compile(regex);
+                Matcher m = p.matcher(fixedTelephone);
+                boolean flag = m.matches();
+                if (flag) {
+                    return fixedTelephone;
+                }
             }
+
         }
-        return result;
+        return "";
     }
+
     public static void main(String[] ags) {
-        System.out.println(reviseFixedTelephone("4916555"));
+//        System.out.println(reviseMobile("18612923210,02098681250"));
+        System.out.println(Double.valueOf(""));
     }
 }

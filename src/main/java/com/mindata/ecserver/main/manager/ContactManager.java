@@ -211,6 +211,9 @@ public class ContactManager {
 
         for (CompanyContact companyContact : contactList) {
             String companyName = companyCodeManager.getNameById(companyContact.getCompId());
+
+            String mphone = companyContact.getPhone();
+            String[] ss = mphone.split(",");
             Integer count = ecContactRepository.countByMobileAndPhone(
                     CommonUtil.reviseMobile(companyContact.getPhone()), reviseFixedTelephone(companyContact.getPhone()));
 
