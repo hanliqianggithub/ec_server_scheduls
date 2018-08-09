@@ -16,4 +16,13 @@ public interface CompanyIndustryInfo88Repository extends JpaRepository<CompanyIn
      * @return 结果
      */
     List<CompanyIndustryInfo88> findByCompId(Long compId);
+
+    /**
+     *
+     * @return List
+     */
+//    List<CompanyIndustryInfo88> findByUpdateTimeLikeAndPhoneIsNotNull(String updateTime);
+
+    List<CompanyIndustryInfo88> findAllByPhoneIsNotNull();
+
 }

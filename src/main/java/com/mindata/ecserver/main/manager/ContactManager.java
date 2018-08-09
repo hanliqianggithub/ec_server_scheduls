@@ -224,6 +224,7 @@ public class ContactManager {
             System.out.println(count + "bbbbbbbbbbbbbbb");
 
             if (count == 0 && StringUtils.isNotEmpty(companyName)) {
+                LOGGER.info("compId为："+companyContact.getCompId());
                 System.out.println(companyContact.getCompId() + "aaaaaaaaaaaaaaa");
                 Integer province = 0;
                 Integer city = 0;
