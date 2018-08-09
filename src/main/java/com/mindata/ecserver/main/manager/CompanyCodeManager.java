@@ -1,6 +1,8 @@
 package com.mindata.ecserver.main.manager;
 
+import com.mindata.ecserver.main.model.thirdly.CompanyCode;
 import com.mindata.ecserver.main.repository.thirdly.CompanyCodeRepository;
+import com.xiaoleilu.hutool.util.ObjectUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,8 +24,9 @@ public class CompanyCodeManager {
      * @param id id
      * @return String
      */
-    public String getNameById(Long id){
-        return companyCodeRepository.findOne(id).getCompName();
+    public String getNameById(Long id) {
+        CompanyCode companyCode = companyCodeRepository.findOne(id);
+        return ObjectUtil.isNull(companyCode) ? null : companyCode.getCompName();
     }
 }
 

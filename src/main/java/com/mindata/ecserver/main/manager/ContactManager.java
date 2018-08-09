@@ -212,8 +212,6 @@ public class ContactManager {
         for (CompanyContact companyContact : contactList) {
             String companyName = companyCodeManager.getNameById(companyContact.getCompId());
 
-            String mphone = companyContact.getPhone();
-            String[] ss = mphone.split(",");
             Integer count = ecContactRepository.countByMobileAndPhone(
                     CommonUtil.reviseMobile(companyContact.getPhone()), reviseFixedTelephone(companyContact.getPhone()));
 
@@ -225,7 +223,7 @@ public class ContactManager {
             }
             System.out.println(count + "bbbbbbbbbbbbbbb");
 
-            if (count == 0) {
+            if (count == 0 && StringUtils.isNotEmpty(companyName)) {
                 System.out.println(companyContact.getCompId() + "aaaaaaaaaaaaaaa");
                 Integer province = 0;
                 Integer city = 0;
