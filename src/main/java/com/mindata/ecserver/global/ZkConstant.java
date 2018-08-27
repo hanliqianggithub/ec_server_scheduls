@@ -11,4 +11,6 @@ public interface ZkConstant {
     String PATH_DEAL_CUSTOMER = "/deal_customer";
     String PATH_SALE_STATE = "/sale_state";
     String PATH_COMPANY_STATE = "/company_state";
+    String PATH_FETCH_CONTACT = "/fetch_contact";
+
 }

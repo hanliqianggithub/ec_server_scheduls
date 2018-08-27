@@ -67,7 +67,7 @@ public class TestController {
     }
     @GetMapping("/test")
     public String test() {
-        contactManager.test();
+        contactManager.fetch88Contact();
         return "customer";
     }
 }

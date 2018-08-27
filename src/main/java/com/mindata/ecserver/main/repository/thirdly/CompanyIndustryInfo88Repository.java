@@ -21,7 +21,7 @@ public interface CompanyIndustryInfo88Repository extends JpaRepository<CompanyIn
      *
      * @return List
      */
-//    List<CompanyIndustryInfo88> findByUpdateTimeLikeAndPhoneIsNotNull(String updateTime);
+    List<CompanyIndustryInfo88> findByUpdateTimeLikeAndPhoneIsNotNull(String updateTime);
 
     List<CompanyIndustryInfo88> findAllByPhoneIsNotNull();
 

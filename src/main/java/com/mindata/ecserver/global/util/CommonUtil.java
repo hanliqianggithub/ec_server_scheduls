@@ -234,7 +234,7 @@ public class CommonUtil {
     }
 
     public static void main(String[] ags) {
-//        System.out.println(reviseMobile("18612923210,02098681250"));
-        System.out.println(Double.valueOf(""));
+        System.out.println(reviseFixedTelephone("18612923210"));
+//        System.out.println(Double.valueOf(""));
     }
 }
