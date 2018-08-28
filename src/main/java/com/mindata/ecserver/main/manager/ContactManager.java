@@ -5,9 +5,11 @@ import com.mindata.ecserver.main.model.es.EsContact;
 import com.mindata.ecserver.main.model.primary.Contact;
 import com.mindata.ecserver.main.model.primary.EcContactEntity;
 import com.mindata.ecserver.main.model.thirdly.CompanyContact;
+import com.mindata.ecserver.main.model.thirdly.CompanyContact3158;
 import com.mindata.ecserver.main.model.thirdly.CompanyIndustryInfo88;
 import com.mindata.ecserver.main.model.thirdly.CompanyJobInfo;
 import com.mindata.ecserver.main.repository.primary.EcContactRepository;
+import com.mindata.ecserver.main.repository.thirdly.CompanyContact3158Repository;
 import com.mindata.ecserver.main.repository.thirdly.CompanyJobInfoRepository;
 import com.xiaoleilu.hutool.util.StrUtil;
 import org.apache.commons.lang.StringUtils;
@@ -20,6 +22,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +57,10 @@ public class ContactManager {
     private CompanyJobInfoRepository companyJobInfoRepository;
     @Resource
     private CompanyInfo88Manager companyInfo88Manager;
+    @Resource
+    private CompanyContact3158Repository companyContact3158Repository;
+
+
     private final Logger LOGGER = LoggerFactory.getLogger(getClass().getName());
 
 
@@ -208,7 +215,7 @@ public class ContactManager {
 
     public void fetch58Contact() {
         StringBuilder jobName = new StringBuilder();
-        List<CompanyContact> contactList =  companyContactManager.getCompanyContactListByUpdateTime();
+        List<CompanyContact> contactList = companyContactManager.getCompanyContactListByUpdateTime();
 
         for (CompanyContact companyContact : contactList) {
             String companyName = companyCodeManager.getNameById(companyContact.getCompId());
@@ -225,7 +232,7 @@ public class ContactManager {
             System.out.println(count + "bbbbbbbbbbbbbbb");
 
             if (count == 0 && StringUtils.isNotEmpty(companyName)) {
-                LOGGER.info("compId为："+companyContact.getCompId());
+                LOGGER.info("compId为：" + companyContact.getCompId());
                 System.out.println(companyContact.getCompId() + "aaaaaaaaaaaaaaa");
                 Integer province = 0;
                 Integer city = 0;
@@ -239,7 +246,7 @@ public class ContactManager {
                 Integer webSiteId = 1;
                 ////////////////////////
                 EcContactEntity ecContactEntity = new EcContactEntity();
-                ecContactEntity.setName(companyContact.getContactPerson()== null ? "" : companyContact.getContactPerson());
+                ecContactEntity.setName(companyContact.getContactPerson() == null ? "" : companyContact.getContactPerson());
                 ecContactEntity.setCompany(companyName);
                 ecContactEntity.setLegal(0);
                 if (jobName.toString().contains("销售")) {
@@ -267,10 +274,11 @@ public class ContactManager {
             }
         }
     }
-    public void fetch88Contact(){
+
+    public void fetch88Contact() {
         StringBuilder jobName = new StringBuilder();
         List<CompanyIndustryInfo88> contactList = companyInfo88Manager.findAllByPhoneIsNotNull();
-        for(CompanyIndustryInfo88 companyInfo:contactList){
+        for (CompanyIndustryInfo88 companyInfo : contactList) {
             String companyName = companyCodeManager.getNameById(companyInfo.getCompId());
             Integer count = ecContactRepository.countByMobileAndPhone(
                     CommonUtil.reviseMobile(companyInfo.getPhone()), reviseFixedTelephone(companyInfo.getPhone()));
@@ -281,7 +289,7 @@ public class ContactManager {
                     jobName.append(companyJobInfo.getJobName()).append(DOUHAO);
                 }
             }
-            if (count == 0 && StringUtils.isNotEmpty(companyName) && companyInfo.getPhone()!= "0000") {
+            if (count == 0 && StringUtils.isNotEmpty(companyName) && companyInfo.getPhone() != "0000") {
                 LOGGER.info("compId为：" + companyInfo.getCompId());
                 Integer province = 0;
                 Integer city = 0;
@@ -294,7 +302,7 @@ public class ContactManager {
                 Integer vocationCode = esVocationCodeManager.findByVocationName(industryList.get(0)).get("vocationCode");
                 Integer webSiteId = 3;
                 EcContactEntity ecContactEntity = new EcContactEntity();
-                ecContactEntity.setName(companyInfo.getContactPerson()== null ? "" : companyInfo.getContactPerson());
+                ecContactEntity.setName(companyInfo.getContactPerson() == null ? "" : companyInfo.getContactPerson());
                 ecContactEntity.setCompany(companyName);
                 ecContactEntity.setLegal(0);
                 if (jobName.toString().contains("销售")) {
@@ -323,5 +331,53 @@ public class ContactManager {
         }
     }
 
+    public void fetch3158Contact() {
+        List<CompanyContact3158> contactList = companyContact3158Repository.findAllByPhoneIsNotNull();
+        for (CompanyContact3158 companyInfo : contactList) {
+            String companyName = companyCodeManager.getNameById(companyInfo.getCompId());
+            Integer count = ecContactRepository.countByMobileAndPhone(
+                    CommonUtil.reviseMobile(companyInfo.getPhone()), reviseFixedTelephone(companyInfo.getPhone()));
+            LOGGER.info("count：" + count);
+            if (count == 0 && StringUtils.isNotEmpty(companyName) && companyInfo.getPhone() != "0000") {
+                LOGGER.info("compId为：" + companyInfo.getCompId());
+                Integer province = 0;
+                Integer city = 0;
+                if (StringUtils.isNotEmpty(companyInfo.getAddr())) {
+                    HashMap<String, Integer> map = ecCodeAreaManager.findAreaCode(companyInfo.getAddr());
+                    province = map.get("province");
+                    city = map.get("city");
+                }
+                List<String> industryList = companyIndustryInfoManager.getIndustryInfoForDb(companyInfo.getCompId(), companyName);
+                Integer vocationCode = esVocationCodeManager.findByVocationName(industryList.get(0)).get("vocationCode");
+                Integer webSiteId = 2;
+                EcContactEntity ecContactEntity = new EcContactEntity();
+                ecContactEntity.setName(companyInfo.getContactPerson() == null ? "" : companyInfo.getContactPerson());
+                ecContactEntity.setCompany(companyName);
+                ecContactEntity.setLegal(0);
+                ecContactEntity.setNeedSale(0);
+                ecContactEntity.setGender(0);
+                ecContactEntity.setMemberSizeTag(companyInfoManager.getSizeId(companyInfo.getCompId()));
+                ecContactEntity.setMobile(CommonUtil.reviseMobile(companyInfo.getPhone()));
+                ecContactEntity.setPhone(reviseFixedTelephone(companyInfo.getPhone()));
+                ecContactEntity.setWebsiteId(webSiteId);
+                ecContactEntity.setProvince(province.toString());
+                ecContactEntity.setCity(city.toString());
+                ecContactEntity.setAddress(companyInfo.getAddr() == null ? "" : companyInfo.getAddr());
+                ecContactEntity.setVocation(vocationCode);
+                ecContactEntity.setState(0);
+                ecContactEntity.setCompId(companyInfo.getCompId());
+                ecContactEntity.setCreateTime(new Date());
+                ecContactEntity.setInsertTime(new Date());
+                ecContactEntity.setCompanyScore(0.00);
+                ecContactEntity.setIpcFlag("");
+                ecContactEntity.setMainJob("");
+                ecContactRepository.save(ecContactEntity);
+            }
+        }
+    }
 
+
+    public static void main(String[] args) {
+
+    }
 }

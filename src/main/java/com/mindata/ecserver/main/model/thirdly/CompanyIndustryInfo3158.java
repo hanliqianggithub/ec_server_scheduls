@@ -9,4 +9,5 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "xs_company_info_3158")
 public class CompanyIndustryInfo3158 extends BaseCompanyIndustryInfo {
+
 }
