@@ -2,6 +2,7 @@ package com.mindata.ecserver.main.repository.primary;
 
 import com.mindata.ecserver.main.model.primary.CompanyQichacha;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
@@ -17,4 +18,10 @@ public interface CompanyQichachaRepository extends JpaRepository<CompanyQichacha
      * @return 结果
      */
     List<CompanyQichacha> findByCompanyName(String companyName);
+
+    /**
+     *
+     * @return List
+     */
+    List<CompanyQichacha> findByCompanyTelephoneNotOrCompanyTelephoneNot(String companyTelephone1,String companyTelephone2);
 }

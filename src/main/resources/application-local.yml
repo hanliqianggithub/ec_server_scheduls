@@ -1,7 +1,7 @@
 spring:
   datasource:
     primary:
-      url: jdbc:mysql://47.92.159.54:3306/company_bak?autoReconnect=true&useUnicode=true&useSSL=false
+      url: jdbc:mysql://47.92.159.54:3306/company?autoReconnect=true&useUnicode=true&useSSL=false
       username: root
       password: MAIda6868#
     secondary:
