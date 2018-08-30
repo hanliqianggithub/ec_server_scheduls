@@ -1,6 +1,8 @@
 package com.mindata.ecserver.main.repository.primary;
 
 import com.mindata.ecserver.main.model.primary.CompanyQichacha;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -23,5 +25,13 @@ public interface CompanyQichachaRepository extends JpaRepository<CompanyQichacha
      *
      * @return List
      */
-    List<CompanyQichacha> findByCompanyTelephoneNotOrCompanyTelephoneNot(String companyTelephone1,String companyTelephone2);
+    Page<CompanyQichacha> findByCompanyTelephoneNotOrCompanyTelephoneNot(String companyTelephone1, String companyTelephone2, Pageable pageable);
+
+    /**
+     *
+     * @param companyTelephone1 companyTelephone1
+     * @param companyTelephone2 companyTelephone2
+     * @return Integer
+     */
+    Integer countByCompanyTelephoneNotOrCompanyTelephoneNot(String companyTelephone1,String companyTelephone2);
 }
