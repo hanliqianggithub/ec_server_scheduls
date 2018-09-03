@@ -9,7 +9,7 @@ spring:
       username: root
       password: MAIda6868#
     thirdly:
-      url: jdbc:mysql://47.92.159.54:3306/scrapy_bak?autoReconnect=true&useUnicode=true&useSSL=false
+      url: jdbc:mysql://47.92.159.54:3306/scrapy?autoReconnect=true&useUnicode=true&useSSL=false
       username: root
       password: MAIda6868#
   redis:

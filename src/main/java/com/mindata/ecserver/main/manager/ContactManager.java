@@ -5,14 +5,12 @@ import com.mindata.ecserver.main.model.es.EsContact;
 import com.mindata.ecserver.main.model.primary.CompanyQichacha;
 import com.mindata.ecserver.main.model.primary.Contact;
 import com.mindata.ecserver.main.model.primary.EcContactEntity;
-import com.mindata.ecserver.main.model.thirdly.CompanyContact;
-import com.mindata.ecserver.main.model.thirdly.CompanyContact3158;
-import com.mindata.ecserver.main.model.thirdly.CompanyIndustryInfo88;
-import com.mindata.ecserver.main.model.thirdly.CompanyJobInfo;
+import com.mindata.ecserver.main.model.thirdly.*;
 import com.mindata.ecserver.main.repository.primary.CompanyQichachaRepository;
 import com.mindata.ecserver.main.repository.primary.EcContactRepository;
 import com.mindata.ecserver.main.repository.thirdly.CompanyContact3158Repository;
 import com.mindata.ecserver.main.repository.thirdly.CompanyJobInfoRepository;
+import com.mindata.ecserver.main.repository.thirdly.CompanyYouBoyRepository;
 import com.xiaoleilu.hutool.util.StrUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -34,6 +32,7 @@ import static com.mindata.ecserver.global.Constant.DOUHAO;
 import static com.mindata.ecserver.global.Constant.STATE_NORMAL;
 import static com.mindata.ecserver.global.GeoConstant.PAGE_SIZE;
 import static com.mindata.ecserver.global.util.CommonUtil.reviseFixedTelephone;
+import static com.mindata.ecserver.global.util.CommonUtil.reviseYouboyPhone;
 
 /**
  * @author wuweifeng wrote on 2017/11/9.
@@ -65,6 +64,8 @@ public class ContactManager {
     private CompanyContact3158Repository companyContact3158Repository;
     @Resource
     private CompanyQichachaRepository companyQichachaRepository;
+    @Resource
+    private CompanyYouBoyRepository companyYouBoyRepository;
 
 
     private final Logger LOGGER = LoggerFactory.getLogger(getClass().getName());
@@ -430,11 +431,59 @@ public class ContactManager {
              }
 
          }
-
-
     }
 
+    public void fetchYouboyContact() {
+        Integer totalCount = companyYouBoyRepository.countByPhoneNot("");
+        for (int i=0;i< totalCount/PAGE_SIZE;i++){
+            Pageable pageable = new PageRequest(i, PAGE_SIZE, Sort.Direction.ASC, "id");
+            List<CompanyYouBoy> contactList = companyYouBoyRepository.
+                    findByPhoneNot("",pageable).getContent();
+            for (CompanyYouBoy companyInfo : contactList) {
+                String companyName = companyCodeManager.getNameById(companyInfo.getCompId());
+                Integer count = ecContactRepository.countByMobileAndPhone(
+                        CommonUtil.reviseYouboyMobile(companyInfo.getPhone()), reviseYouboyPhone(companyInfo.getPhone()));
+                LOGGER.info("count：" + count);
+                if (count == 0 && StringUtils.isNotEmpty(companyName)) {
+                    Integer province = 0;
+                    Integer city = 0;
+                    if (StringUtils.isNotEmpty(companyInfo.getCompAddr())) {
+                        HashMap<String, Integer> map = ecCodeAreaManager.findAreaCode(companyInfo.getCompAddr());
+                        province = map.get("province");
+                        city = map.get("city");
+                    }
+                    List<String> industryList = companyIndustryInfoManager.getIndustryInfoForDb(companyInfo.getId(), companyName);
+                    Integer vocationCode = esVocationCodeManager.findByVocationName(industryList.get(0)).get("vocationCode");
+                    Integer webSiteId = 8;
+                    EcContactEntity ecContactEntity = new EcContactEntity();
+                    ecContactEntity.setName(companyInfo.getContactPerson() == null ? "" : companyInfo.getContactPerson());
+                    ecContactEntity.setCompany(companyName);
+                    ecContactEntity.setLegal(0);
+                    ecContactEntity.setNeedSale(0);
+                    ecContactEntity.setGender(0);
+                    ecContactEntity.setMemberSizeTag(CODESIZE_OTHER);
+                    ecContactEntity.setMobile(CommonUtil.reviseYouboyMobile(companyInfo.getPhone()));
+                    ecContactEntity.setPhone(reviseYouboyPhone(companyInfo.getPhone()));
+                    ecContactEntity.setWebsiteId(webSiteId);
+                    ecContactEntity.setProvince(province.toString());
+                    ecContactEntity.setCity(city.toString());
+                    ecContactEntity.setAddress(companyInfo.getCompAddr() == null ? "" : companyInfo.getCompAddr());
+                    ecContactEntity.setVocation(vocationCode);
+                    ecContactEntity.setState(0);
+                    ecContactEntity.setCompId(companyInfo.getId());
+                    ecContactEntity.setCreateTime(new Date());
+                    ecContactEntity.setInsertTime(new Date());
+                    ecContactEntity.setCompanyScore(0.00);
+                    ecContactEntity.setIpcFlag("");
+                    ecContactEntity.setMainJob("");
+                    ecContactRepository.save(ecContactEntity);
+                }
+            }
+
+        }
+    }
     public static void main(String[] args) {
+        System.out.println("aaaa");
 
     }
 }

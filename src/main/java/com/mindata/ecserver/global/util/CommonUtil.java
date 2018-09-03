@@ -233,8 +233,48 @@ public class CommonUtil {
         return "";
     }
 
+
+    public static String reviseYouboyPhone(String phone) {
+
+        if (phone.startsWith("86")) {
+            phone = phone.substring(3);
+            if (phone.contains(" ")) {
+                phone = phone.replace("", "-");
+            }
+            if (phone.contains(",")) {
+                phone = phone.split(",")[0];
+            }
+            if (phone.contains("、")) {
+                phone = phone.split("、")[0];
+            }
+            if (phone.contains("-")) {
+                String zoneDescription = phone.split("-")[0];
+                if (!zoneDescription.startsWith("0") && zoneDescription.length() <= 3) {
+                    phone = 0 + phone;
+                }
+            }
+
+        }
+
+        if (phone.startsWith("-")) {
+            phone = phone.substring(1);
+        }
+        return reviseFixedTelephone(phone);
+    }
+
+    public static String reviseYouboyMobile(String phone) {
+        if (phone.contains("-")) {
+            String[] tmpPhone = phone.split("-");
+            if (tmpPhone.length == 3) {
+                phone = tmpPhone[2];
+            }
+        }
+        return reviseMobile(phone);
+    }
+
+
     public static void main(String[] ags) {
-        System.out.println(reviseFixedTelephone("18612923210"));
+        System.out.println(reviseYouboyPhone("86-574-87878128"));
 //        System.out.println(Double.valueOf(""));
     }
 }
